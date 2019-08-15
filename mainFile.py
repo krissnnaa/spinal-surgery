@@ -20,104 +20,114 @@ from scipy import sparse
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.metrics import precision_recall_fscore_support
 from sklearn.linear_model import LogisticRegression
+
 pd.options.display.max_rows = 999
-pd.options.display.max_columns=999
-pd.options.display.width=200
+pd.options.display.max_columns = 999
+pd.options.display.width = 200
 
-def logisticRegressionClassifier(x_train, y_train,x_test,y_test):
 
+def logisticRegressionClassifier(x_train, y_train, x_test, y_test):
     ros = RandomOverSampler(random_state=0)
     print(sorted(Counter(y_train).items()))
     X_resampled, y_resampled = ros.fit_resample(x_train, y_train)
     print(sorted(Counter(y_resampled).items()))
-    clf=LogisticRegression(random_state=0,solver='sag')
-    scores = cross_val_score(clf, X_resampled,y_resampled, cv=2)
+    clf = LogisticRegression(random_state=0, solver='sag')
+    scores = cross_val_score(clf, X_resampled, y_resampled, cv=2)
     clf.predict(x_test)
     accuracyScore = clf.score(x_test, y_test)
     print('Logistic accuracy score for test set=%0.2f' % accuracyScore)
     print(scores)
 
-def SGDClassifierFunction(x_train, y_train,x_test,y_test):
 
+def SGDClassifierFunction(x_train, y_train, x_test, y_test):
     ros = RandomOverSampler(random_state=0)
     X_resampled, y_resampled = ros.fit_resample(x_train, y_train)
-    clf=SGDClassifier(loss="log", penalty='l2').fit(X_resampled, y_resampled)
-    y_pre=clf.predict(x_test)
+    clf = SGDClassifier(loss="log", penalty='l2').fit(X_resampled, y_resampled)
+    y_pre = clf.predict(x_test)
     accuracyScore = clf.score(x_test, y_test)
     print('Logistic regression with SGD accuracy score for test set=%0.2f' % accuracyScore)
-    p, r, f, s = precision_recall_fscore_support(y_test, y_pre, pos_label='Yes', average='binary')
-    print(p,r,f,s)
+    p, r, f, s = precision_recall_fscore_support(y_test, y_pre, pos_label='No', average='binary')
+    print('Precision of Logistic regression with SGD = %f' % p)
+    print('Recall of Logistic regression with SGD = %f' % r)
+    print('F1 score of Logistic regression with SGD = %f' % f)
     confusion_matrix_plot(y_test, y_pre)
 
     clf = SGDClassifier(loss="hinge", penalty='l2').fit(X_resampled, y_resampled)
-    y_pre=clf.predict(x_test)
+    y_pre = clf.predict(x_test)
     accuracyScore = clf.score(x_test, y_test)
     print('SVM with SGD accuracy score for test set=%0.2f' % accuracyScore)
-    p, r, f, s = precision_recall_fscore_support(y_test, y_pre, pos_label='Yes', average='binary')
-    print(p, r, f, s)
+    p, r, f, s = precision_recall_fscore_support(y_test, y_pre, pos_label='No', average='binary')
+    print('Precision of SVM with SGD = %f' % p)
+    print('Recall of SVM  with SGD = %f' % r)
+    print('F1 score of SVM with SGD = %f' % f)
     confusion_matrix_plot(y_test, y_pre)
 
-def LinearSVMClassifier(x_train, y_train,x_test,y_test):
 
+def LinearSVMClassifier(x_train, y_train, x_test, y_test):
     ros = RandomOverSampler(random_state=0)
     X_resampled, y_resampled = ros.fit_resample(x_train, y_train)
-    clf=LinearSVC(random_state=0).fit(X_resampled, y_resampled)
-    y_pre=clf.predict(x_test)
+    clf = LinearSVC(random_state=0).fit(X_resampled, y_resampled)
+    y_pre = clf.predict(x_test)
     accuracyScore = clf.score(x_test, y_test)
     print('Linear SVC accuracy score for test set=%0.2f' % accuracyScore)
-    p, r, f, s = precision_recall_fscore_support(y_test, y_pre, pos_label='Yes', average='binary')
-    print(p, r, f, s)
-    confusion_matrix_plot(y_test, y_pre)
-    
-def ensembleClassifier(x_train, y_train,x_test,y_test):
+    p, r, f, s = precision_recall_fscore_support(y_test, y_pre, pos_label='No', average='binary')
+    print('Precision of Linear SVM= %f' %p)
+    print('Recall of Linear SVM= %f' % r)
+    print('F1 score of Linear SVM= %f' % f)
 
+    confusion_matrix_plot(y_test, y_pre)
+
+
+def ensembleClassifier(x_train, y_train, x_test, y_test):
     ros = RandomOverSampler(random_state=0)
     X_resampled, y_resampled = ros.fit_resample(x_train, y_train)
-    clf=RandomForestClassifier(n_estimators=50,random_state=0).fit(X_resampled, y_resampled)
-    y_pre=clf.predict(x_test)
+    clf = RandomForestClassifier(n_estimators=50, random_state=0).fit(X_resampled, y_resampled)
+    y_pre = clf.predict(x_test)
     accuracyScore = clf.score(x_test, y_test)
     print('Ensemble Random Forest  accuracy score for test set=%0.2f' % accuracyScore)
-    p, r, f, s = precision_recall_fscore_support(y_test, y_pre, pos_label='Yes', average='binary')
-    print(p, r, f, s)
-    confusion_matrix_plot(y_test,y_pre)
+    p, r, f, s = precision_recall_fscore_support(y_test, y_pre, pos_label='No', average='binary')
+    print('Precision of Random Forest = %f' % p)
+    print('Recall of Random Forest = %f' % r)
+    print('F1 score of Random Forest = %f' % f)
+    confusion_matrix_plot(y_test, y_pre)
 
-def confusion_matrix_plot(y_true, y_pred, normalize=True, cmap=plt.cm.Blues):
+
+def confusion_matrix_plot(y_true, y_pred, normalize=False, cmap=plt.cm.Blues):
     """
     source:
     https://scikit-learn.org/stable/auto_examples/model_selection/plot_confusion_matrix.html
     """
     title = 'Confusion matrix'
     # Compute confusion matrix
-    yTrue=[]
-    yPre=[]
+    yTrue = []
+    yPre = []
 
-    for item,decision in zip(y_true,y_pred):
-        if item=='Yes':
+    for item, decision in zip(y_true, y_pred):
+        if item == 'Yes':
             yTrue.append(1)
         else:
             yTrue.append(0)
-        if decision=='Yes':
+        if decision == 'Yes':
             yPre.append(1)
         else:
             yPre.append(0)
 
-    for i in range(0,len(yTrue)):
-        yTrue[i]=int(yTrue[i])
+    for i in range(0, len(yTrue)):
+        yTrue[i] = int(yTrue[i])
     for i in range(0, len(yPre)):
         yPre[i] = int(yPre[i])
 
     cm = confusion_matrix(yTrue, yPre)
     # labels that appear in the data
-    classes = np.array(['PODIAG', 'RETURNOR', 'STILLINHOSP'])
+    classes = np.array(['RETURNOR', 'NORETURNOR'])
     classes = classes[unique_labels(yTrue, yPre)]
     print('Confusion Matrix Count')
     print(cm)
-    cm = cm.astype('float') / cm.sum(axis=1)[:, np.newaxis]
-    print(title)
-    print(cm)
+    if normalize:
+        cm = cm.astype('float') / cm.sum(axis=1)[:, np.newaxis]
 
     fig, ax = plt.subplots()
-    im = ax.imshow(cm, interpolation='nearest', cmap=cmap)
+    im = ax.imshow(cm, interpolation='nearest',cmap=cmap)
     ax.figure.colorbar(im, ax=ax)
 
     # All ticks...
@@ -126,7 +136,7 @@ def confusion_matrix_plot(y_true, y_pred, normalize=True, cmap=plt.cm.Blues):
            # ... and label them with the respective list entries
            xticklabels=classes, yticklabels=classes,
            title=title,
-           ylabel='True label',
+           ylabel='Actual label',
            xlabel='Predicted label')
 
     # Rotate the tick labels and set their alignment.
@@ -136,6 +146,7 @@ def confusion_matrix_plot(y_true, y_pred, normalize=True, cmap=plt.cm.Blues):
     # Loop over data dimensions and create text annotations.
     fmt = '.2f' if normalize else 'd'
     thresh = cm.max() / 2.
+
     for i in range(cm.shape[0]):
         for j in range(cm.shape[1]):
             ax.text(j, i, format(cm[i, j], fmt),
@@ -146,18 +157,17 @@ def confusion_matrix_plot(y_true, y_pred, normalize=True, cmap=plt.cm.Blues):
 
 
 if __name__ == '__main__':
-
     # ------------------read dump data--------------
     X_dum = sparse.load_npz('X_dum_mat.npz')
     new_Y = np.load('new_Y_mat.npy', allow_pickle=True)
     names = np.load('X_dum_attrNames.npy', allow_pickle=True)
     print(X_dum.shape)
-    
     # Use the first label for prediction
     Y = new_Y[:, 0]
 
     # down Size!!!!
     from sklearn.utils.random import sample_without_replacement
+
     inds = sample_without_replacement(n_samples=60000, n_population=len(Y))
     X_down = X_dum.tocsr()
     X_down = X_down[inds, :]
@@ -166,17 +176,24 @@ if __name__ == '__main__':
     # splitting the datasets: 10% test
     X_train, X_test, y_train, y_test = train_test_split(X_down, Y_down, test_size=0.1)
 
+    # check some ground truth
+    # 1 how many positive in test
+    unique, counts = np.unique(y_test, return_counts=True)
+    print(unique)
+    print(counts)
+
+    print(X_train.shape)
+
     # normalize data
-    X_train=normalize(X_train,norm='l1',axis=1)
+    X_train = normalize(X_train, norm='l1', axis=1)
     X_test = normalize(X_test, norm='l1', axis=1)
 
 
     # Logistic Regression
-    #logisticRegressionClassifier(X_train, y_train, X_test, y_test)
+    # logisticRegressionClassifier(X_train, y_train, X_test, y_test)
 
-    #SGD classifier
+    # SGD classifier
     SGDClassifierFunction(X_train, y_train, X_test, y_test)
-    
     # Linear SVC
     LinearSVMClassifier(X_train, y_train, X_test, y_test)
 
