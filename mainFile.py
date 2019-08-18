@@ -35,11 +35,6 @@ from sklearn.ensemble import RandomForestClassifier
 from sklearn.metrics import precision_recall_fscore_support
 from sklearn.linear_model import LogisticRegression
 
-pd.options.display.max_rows = 999
-pd.options.display.max_columns = 999
-pd.options.display.width = 200
-
-
 def logisticRegressionClassifier(x_train, y_train, x_test, y_test):
 
     clf = LogisticRegression(random_state=0, solver='sag',C=0.1).fit(x_train, y_train)
