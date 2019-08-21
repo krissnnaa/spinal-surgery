@@ -13,13 +13,9 @@ from sklearn.metrics import make_scorer
 from sklearn.metrics import accuracy_score
 from sklearn.tree import DecisionTreeClassifier
 from sklearn import tree
-from sklearn.svm import SVC
 import graphviz
 from sklearn.preprocessing import MultiLabelBinarizer
 from sklearn.utils.multiclass import unique_labels
-from sklearn.model_selection import cross_val_score
-from imblearn.over_sampling import RandomOverSampler
-from collections import Counter
 from sklearn.svm import LinearSVC
 from sklearn.svm import SVC
 from sklearn.model_selection import GridSearchCV
@@ -27,7 +23,6 @@ from sklearn.metrics import classification_report
 import numpy as np
 import pandas as pd
 from sklearn.model_selection import train_test_split
-from sklearn.preprocessing import normalize
 from sklearn.metrics import confusion_matrix
 from matplotlib import pyplot as plt
 from scipy import sparse
@@ -113,23 +108,24 @@ def decisionTreeClassification(x_train, y_train, x_test, y_test,names):
     clf = tree.DecisionTreeClassifier(criterion='entropy').fit(x_train, y_train)
     y_pre = clf.predict(x_test)
     accuracyScore = clf.score(x_test, y_test)
-    print('Ensemble Random Forest  accuracy score for test set=%0.2f' % accuracyScore)
+    print('Decision tree accuracy score for test set=%0.2f' % accuracyScore)
     p, r, f, s = precision_recall_fscore_support(y_test, y_pre, pos_label='Yes', average='binary')
-    print('Precision of Random Forest = %f' % p)
-    print('Recall of Random Forest = %f' % r)
-    print('F1 score of Random Forest = %f' % f)
-    #confusion_matrix_plot(y_test, y_pre)
-    #tree.plot_tree(clf.fit(x_train, y_train))
+    print('Precision of Decision tree = %f' % p)
+    print('Recall of Decision tree = %f' % r)
+    print('F1 score of Decision tree = %f' % f)
+    confusion_matrix_plot(y_test, y_pre)
+
     classes = np.array(['RETURNOR', 'NORETURNOR'])
     dot_data = tree.export_graphviz(clf, out_file=None,
                                     feature_names = names,
                                     class_names = classes,
                                     filled = True, rounded = True,
                                     special_characters = True)
+
     graph = graphviz.Source(dot_data)
     graph.view()
 
-    print()
+
 
 def confusion_matrix_plot(y_true, y_pred, normalize=False, cmap=plt.cm.Blues):
     """
@@ -388,15 +384,15 @@ if __name__ == '__main__':
 
 
     # Logistic Regression
-    #logisticRegressionClassifier(X_train, y_train, X_test, y_test)
+    logisticRegressionClassifier(X_train, y_train, X_test, y_test)
 
     # SGD classifier
-    #SGDClassifierFunction(X_train, y_train, X_test, y_test)
+    SGDClassifierFunction(X_train, y_train, X_test, y_test)
     # Linear SVC
-    # LinearSVMClassifier(X_train, y_train, X_test, y_test)
+    LinearSVMClassifier(X_train, y_train, X_test, y_test)
 
     # Ensemble Random forest
-    #ensembleClassifier(X_train, y_train, X_test, y_test)
+    ensembleClassifier(X_train, y_train, X_test, y_test)
 
     # Decision tree
     decisionTreeClassification(X_train, y_train, X_test, y_test,names)
