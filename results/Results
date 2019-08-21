@@ -1,0 +1,83 @@
+===================================
+Logistic regression with SGD accuracy score for test set=0.65
+Precision of Logistic regression with SGD = 0.980814
+Recall of Logistic regression with SGD = 0.654753
+F1 score of Logistic regression with SGD = 0.785282
+
+====================================
+SVM with SGD accuracy score for test set=0.67
+Precision of SVM with SGD = 0.980263
+Recall of SVM  with SGD = 0.674541
+F1 score of SVM with SGD = 0.799161
+======================================
+Linear SVC accuracy score for test set=0.79
+Precision of Linear SVM= 0.983669
+Recall of Linear SVM= 0.798408
+F1 score of Linear SVM= 0.881409
+=================================
+Ensemble Random Forest  accuracy score for test set=0.97
+Precision of Random Forest = 0.970833
+Recall of Random Forest = 1.000000
+F1 score of Random Forest = 0.985201
+====================================================\\AUG 17=======================
+a) Random Forest:
+
+1) Under Normal data (complete unbalance)
+
+(2832260, 128)
+Train Data Labels:
+['No' 'Yes']
+[1923123   59459]
+Size of Train
+(1982582, 128)
+Test Data Labels:
+['No' 'Yes']
+[824697  24981]
+Size of Test
+(849678, 128)
+Ensemble Random Forest  accuracy score for test set=0.97
+Precision of Random Forest = 0.614130
+Recall of Random Forest = 0.004523
+F1 score of Random Forest = 0.008981
+Confusion Matrix Count
+[[   113  24868]
+ [    71 824626]]
+
+
+2) Applying undersample (balance)
+
+(2832264, 128)
+Backend TkAgg is interactive backend. Turning interactive mode on.
+Removing 4 of NAN
+(2832260, 128)
+Train Data Labels:
+['No' 'Yes']
+[1923490   59092]
+Size of Train
+(1982582, 128)
+Test Data Labels:
+['No' 'Yes']
+[824330  25348]
+Size of Test
+(849678, 128)
+Ensemble Random Forest  accuracy score for test set=0.75
+Precision of Random Forest = 0.078243
+Recall of Random Forest = 0.679265
+F1 score of Random Forest = 0.140322
+Confusion Matrix Count
+[[ 17218   8130]
+ [202841 621489]]
+===================
+logistic with 50K
+Logistic accuracy score for test set=0.97
+Precision of Logistic regression with SGD = 0.240000
+Recall of Logistic regression with SGD = 0.014888
+F1 score of Logistic regression with SGD = 0.028037
+Confusion Matrix Count
+[[    6   397]
+ [   19 14578]]
+
+====
+
+
+
